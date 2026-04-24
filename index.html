@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 Crop Recommendation System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 2.5em; }
+        .input-section { text-align: center; margin-bottom: 30px; }
+        input[type="text"] { padding: 12px 20px; font-size: 16px; border: 2px solid #3498db; border-radius: 25px; width: 300px; margin-right: 10px; }
+        button { padding: 12px 30px; font-size: 16px; background: #27ae60; color: white; border: none; border-radius: 25px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #229954; }
+        .weather-info { background: #ecf0f1; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none; }
+        .weather-info h3 { color: #2c3e50; margin-bottom: 15px; }
+        .weather-data { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        .weather-item { background: white; padding: 15px; border-radius: 8px; text-align: center; }
+        .weather-item span { display: block; font-size: 24px; font-weight: bold; color: #3498db; }
+        .crops-section { display: none; }
+        .crops-section h3 { color: #2c3e50; margin-bottom: 20px; }
+        .crop-card { background: #f8f9fa; border-left: 4px solid #27ae60; padding: 20px; margin-bottom: 15px; border-radius: 8px; }
+        .crop-name { font-size: 1.3em; font-weight: bold; color: #27ae60; margin-bottom: 10px; }
+        .crop-score { background: #27ae60; color: white; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+        .crop-details { color: #555; line-height: 1.6; }
+        .loading { text-align: center; color: #3498db; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 Crop Recommendation System</h1>
+        
+        <div class="input-section">
+            <input type="text" id="location" placeholder="Enter your location" value="Delhi">
+            <button onclick="getRecommendations()">Get Recommendations</button>
+        </div>
+        
+        <div class="loading" id="loading">Analyzing weather data... 🌡️</div>
+        
+        <div class="weather-info" id="weatherInfo">
+            <h3>📍 Current Weather Conditions</h3>
+            <div class="weather-data">
+                <div class="weather-item">
+                    <span id="temperature">--</span>
+                    Temperature (°C)
+                </div>
+                <div class="weather-item">
+                    <span id="rainfall">--</span>
+                    Rainfall (mm)
+                </div>
+                <div class="weather-item">
+                    <span id="windSpeed">--</span>
+                    Wind Speed (km/h)
+                </div>
+                <div class="weather-item">
+                    <span id="season">--</span>
+                    Season
+                </div>
+            </div>
+        </div>
+        
+        <div class="crops-section" id="cropsSection">
+            <h3>🌱 Recommended Crops</h3>
+            <div id="cropsList"></div>
+        </div>
+    </div>
+
+    <script>
+        async function getRecommendations() {
+            const location = document.getElementById('location').value || 'Delhi';
+            const loading = document.getElementById('loading');
+            const weatherInfo = document.getElementById('weatherInfo');
+            const cropsSection = document.getElementById('cropsSection');
+            
+            loading.style.display = 'block';
+            weatherInfo.style.display = 'none';
+            cropsSection.style.display = 'none';
+            
+            try {
+                const response = await fetch('/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `location=${encodeURIComponent(location)}`
+                });
+                
+                const data = await response.json();
+                
+                document.getElementById('temperature').textContent = data.weather.temperature;
+                document.getElementById('rainfall').textContent = data.weather.rainfall;
+                document.getElementById('windSpeed').textContent = data.weather.wind_speed;
+                document.getElementById('season').textContent = data.season;
+                
+                const cropsList = document.getElementById('cropsList');
+                cropsList.innerHTML = '';
+                
+                data.crops.forEach((crop, index) => {
+                    const [cropName, score] = crop;
+                    const cropData = {
+                        wheat: { temp: '15-25', rain: '400-700' },
+                        rice: { temp: '20-35', rain: '1000-2000' },
+                        corn: { temp: '15-30', rain: '500-800' },
+                        cotton: { temp: '20-35', rain: '500-700' },
+                        potato: { temp: '15-20', rain: '400-600' },
+                        tomato: { temp: '18-25', rain: '400-800' },
+                        soybean: { temp: '20-30', rain: '500-900' },
+                        barley: { temp: '12-20', rain: '300-500' }
+                    };
+                    
+                    const details = cropData[cropName] || { temp: '--', rain: '--' };
+                    
+                    cropsList.innerHTML += `
+                        <div class="crop-card">
+                            <div class="crop-name">${cropName.charAt(0).toUpperCase() + cropName.slice(1)}</div>
+                            <div class="crop-score">Score: ${score}/100</div>
+                            <div class="crop-details">
+                                🌡️ Best Temperature: ${details.temp}°C<br>
+                                💧 Best Rainfall: ${details.rain}mm
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                loading.style.display = 'none';
+                weatherInfo.style.display = 'block';
+                cropsSection.style.display = 'block';
+                
+            } catch (error) {
+                loading.textContent = 'Error getting recommendations. Please try again.';
+                console.error('Error:', error);
+            }
+        }
+        
+        window.onload = () => getRecommendations();
+    </script>
+</body>
+</html>
