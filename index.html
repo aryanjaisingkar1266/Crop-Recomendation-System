@@ -81,7 +81,7 @@
                 const response = await fetch('/recommend', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `location=${encodeURIComponent(location)}`
+                    body: 'location=' + encodeURIComponent(location)
                 });
                 
                 const data = await response.json();
@@ -97,28 +97,64 @@
                 data.crops.forEach((crop, index) => {
                     const [cropName, score] = crop;
                     const cropData = {
-                        wheat: { temp: '15-25', rain: '400-700' },
                         rice: { temp: '20-35', rain: '1000-2000' },
-                        corn: { temp: '15-30', rain: '500-800' },
-                        cotton: { temp: '20-35', rain: '500-700' },
-                        potato: { temp: '15-20', rain: '400-600' },
-                        tomato: { temp: '18-25', rain: '400-800' },
-                        soybean: { temp: '20-30', rain: '500-900' },
-                        barley: { temp: '12-20', rain: '300-500' }
+                        wheat: { temp: '10-25', rain: '500-1000' },
+                        maize: { temp: '18-27', rain: '500-800' },
+                        barley: { temp: '12-20', rain: '300-500' },
+                        cotton: { temp: '21-30', rain: '500-1000' },
+                        sugarcane: { temp: '20-35', rain: '750-1500' },
+                        millet: { temp: '25-35', rain: '300-600' },
+                        sorghum: { temp: '25-32', rain: '400-700' },
+                        pulses: { temp: '20-30', rain: '400-800' },
+                        groundnut: { temp: '25-35', rain: '500-1000' },
+                        mustard: { temp: '10-25', rain: '300-600' },
+                        soybean: { temp: '20-30', rain: '600-1000' },
+                        tea: { temp: '20-30', rain: '1500-3000' },
+                        coffee: { temp: '15-28', rain: '1500-2500' },
+                        jute: { temp: '24-35', rain: '1000-2000' },
+                        potato: { temp: '15-25', rain: '500-1000' },
+                        onion: { temp: '13-30', rain: '500-800' },
+                        tomato: { temp: '18-27', rain: '400-700' },
+                        banana: { temp: '20-35', rain: '1000-2500' },
+                        mango: { temp: '24-35', rain: '750-2500' },
+                        chickpea: { temp: '20-30', rain: '400-600' },
+                        lentil: { temp: '18-30', rain: '300-500' },
+                        blackgram: { temp: '25-35', rain: '600-800' },
+                        greengram: { temp: '25-35', rain: '500-700' },
+                        peas: { temp: '10-25', rain: '400-700' },
+                        sunflower: { temp: '20-30', rain: '500-800' },
+                        sesame: { temp: '25-35', rain: '300-600' },
+                        castor: { temp: '20-30', rain: '500-800' },
+                        linseed: { temp: '10-25', rain: '400-700' },
+                        tobacco: { temp: '20-30', rain: '600-1000' },
+                        cabbage: { temp: '15-25', rain: '400-800' },
+                        cauliflower: { temp: '15-25', rain: '400-800' },
+                        brinjal: { temp: '20-30', rain: '600-1000' },
+                        chili: { temp: '20-30', rain: '600-1200' },
+                        garlic: { temp: '12-25', rain: '300-500' },
+                        ginger: { temp: '20-30', rain: '1000-2000' },
+                        turmeric: { temp: '20-30', rain: '1000-2000' },
+                        apple: { temp: '5-24', rain: '800-1500' },
+                        grapes: { temp: '15-35', rain: '500-800' },
+                        orange: { temp: '15-30', rain: '750-1500' },
+                        papaya: { temp: '22-35', rain: '1000-2000' },
+                        pineapple: { temp: '20-30', rain: '1000-1500' },
+                        watermelon: { temp: '22-35', rain: '400-600' },
+                        muskmelon: { temp: '25-35', rain: '300-500' }
                     };
                     
                     const details = cropData[cropName] || { temp: '--', rain: '--' };
                     
-                    cropsList.innerHTML += `
-                        <div class="crop-card">
-                            <div class="crop-name">${cropName.charAt(0).toUpperCase() + cropName.slice(1)}</div>
-                            <div class="crop-score">Score: ${score}/100</div>
-                            <div class="crop-details">
-                                🌡️ Best Temperature: ${details.temp}°C<br>
-                                💧 Best Rainfall: ${details.rain}mm
-                            </div>
-                        </div>
-                    `;
+                    const cropNameCapitalized = cropName.charAt(0).toUpperCase() + cropName.slice(1);
+                    cropsList.innerHTML += 
+                        '<div class="crop-card">' +
+                            '<div class="crop-name">' + cropNameCapitalized + '</div>' +
+                            '<div class="crop-score">Score: ' + score + '/100</div>' +
+                            '<div class="crop-details">' +
+                                '🌡️ Best Temperature: ' + details.temp + '°C<br>' +
+                                '💧 Best Rainfall: ' + details.rain + 'mm' +
+                            '</div>' +
+                        '</div>';
                 });
                 
                 loading.style.display = 'none';
