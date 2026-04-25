@@ -5,51 +5,97 @@ import json
 class CropRecommender:
     def __init__(self):
         self.crops_db = {
-            "wheat": {"temp_range": (15, 25), "rainfall": (400, 700), "wind_speed": (0, 20), "season": "winter"},
-            "rice": {"temp_range": (20, 35), "rainfall": (1000, 2000), "wind_speed": (0, 15), "season": "summer"},
-            "corn": {"temp_range": (15, 30), "rainfall": (500, 800), "wind_speed": (0, 25), "season": "summer"},
-            "cotton": {"temp_range": (20, 35), "rainfall": (500, 700), "wind_speed": (0, 20), "season": "summer"},
-            "potato": {"temp_range": (15, 20), "rainfall": (400, 600), "wind_speed": (0, 15), "season": "winter"},
-            "tomato": {"temp_range": (18, 25), "rainfall": (400, 800), "wind_speed": (0, 20), "season": "summer"},
-            "soybean": {"temp_range": (20, 30), "rainfall": (500, 900), "wind_speed": (0, 20), "season": "summer"},
-            "barley": {"temp_range": (12, 20), "rainfall": (300, 500), "wind_speed": (0, 20), "season": "winter"}
+             "rice": {"temp_range": (20, 35), "rainfall": (1000, 2000), "wind_speed": (0, 15), "season": "kharif"},
+             "wheat": {"temp_range": (10, 25), "rainfall": (500, 1000), "wind_speed": (0, 20), "season": "rabi"},
+             "maize": {"temp_range": (18, 27), "rainfall": (500, 800), "wind_speed": (0, 20), "season": "kharif"},
+             "barley": {"temp_range": (12, 20), "rainfall": (300, 500), "wind_speed": (0, 20), "season": "rabi"},
+             "cotton": {"temp_range": (21, 30), "rainfall": (500, 1000), "wind_speed": (0, 15), "season": "kharif"},
+             "sugarcane": {"temp_range": (20, 35), "rainfall": (750, 1500), "wind_speed": (0, 10), "season": "annual"},
+             "millet": {"temp_range": (25, 35), "rainfall": (300, 600), "wind_speed": (0, 25), "season": "kharif"},
+             "sorghum": {"temp_range": (25, 32), "rainfall": (400, 700), "wind_speed": (0, 25), "season": "kharif"},
+             "pulses": {"temp_range": (20, 30), "rainfall": (400, 800), "wind_speed": (0, 20), "season": "both"},
+             "groundnut": {"temp_range": (25, 35), "rainfall": (500, 1000), "wind_speed": (0, 20), "season": "kharif"},
+             "mustard": {"temp_range": (10, 25), "rainfall": (300, 600), "wind_speed": (0, 15), "season": "rabi"},
+             "soybean": {"temp_range": (20, 30), "rainfall": (600, 1000), "wind_speed": (0, 20), "season": "kharif"},
+             "tea": {"temp_range": (20, 30), "rainfall": (1500, 3000), "wind_speed": (0, 10), "season": "perennial"},
+             "coffee": {"temp_range": (15, 28), "rainfall": (1500, 2500), "wind_speed": (0, 10), "season": "perennial"},
+             "jute": {"temp_range": (24, 35), "rainfall": (1000, 2000), "wind_speed": (0, 15), "season": "kharif"},
+             "potato": {"temp_range": (15, 25), "rainfall": (500, 1000), "wind_speed": (0, 15), "season": "rabi"},
+             "onion": {"temp_range": (13, 30), "rainfall": (500, 800), "wind_speed": (0, 15), "season": "both"},
+             "tomato": {"temp_range": (18, 27), "rainfall": (400, 700), "wind_speed": (0, 15), "season": "both"},
+             "banana": {"temp_range": (20, 35), "rainfall": (1000, 2500), "wind_speed": (0, 10), "season": "annual"},
+             "mango": {"temp_range": (24, 35), "rainfall": (750, 2500), "wind_speed": (0, 10), "season": "summer"},
+             "chickpea": {"temp_range": (20, 30), "rainfall": (400, 600), "wind_speed": (0, 20), "season": "rabi"},
+             "lentil": {"temp_range": (18, 30), "rainfall": (300, 500), "wind_speed": (0, 20), "season": "rabi"},
+             "blackgram": {"temp_range": (25, 35), "rainfall": (600, 800), "wind_speed": (0, 20), "season": "kharif"},
+             "greengram": {"temp_range": (25, 35), "rainfall": (500, 700), "wind_speed": (0, 20), "season": "kharif"},
+             "peas": {"temp_range": (10, 25), "rainfall": (400, 700), "wind_speed": (0, 15), "season": "rabi"},
+             "sunflower": {"temp_range": (20, 30), "rainfall": (500, 800), "wind_speed": (0, 20), "season": "both"},
+             "sesame": {"temp_range": (25, 35), "rainfall": (300, 600), "wind_speed": (0, 20), "season": "kharif"},
+             "castor": {"temp_range": (20, 30), "rainfall": (500, 800), "wind_speed": (0, 20), "season": "kharif"},
+             "linseed": {"temp_range": (10, 25), "rainfall": (400, 700), "wind_speed": (0, 15), "season": "rabi"},
+             "tobacco": {"temp_range": (20, 30), "rainfall": (600, 1000), "wind_speed": (0, 15), "season": "both"},
+             "cabbage": {"temp_range": (15, 25), "rainfall": (400, 800), "wind_speed": (0, 15), "season": "rabi"},
+             "cauliflower": {"temp_range": (15, 25), "rainfall": (400, 800), "wind_speed": (0, 15), "season": "rabi"},
+             "brinjal": {"temp_range": (20, 30), "rainfall": (600, 1000), "wind_speed": (0, 15), "season": "both"},
+             "chili": {"temp_range": (20, 30), "rainfall": (600, 1200), "wind_speed": (0, 15), "season": "kharif"},
+             "garlic": {"temp_range": (12, 25), "rainfall": (300, 500), "wind_speed": (0, 15), "season": "rabi"},
+             "ginger": {"temp_range": (20, 30), "rainfall": (1000, 2000), "wind_speed": (0, 10), "season": "kharif"},
+             "turmeric": {"temp_range": (20, 30), "rainfall": (1000, 2000), "wind_speed": (0, 10), "season": "kharif"},
+             "apple": {"temp_range": (5, 24), "rainfall": (800, 1500), "wind_speed": (0, 10), "season": "temperate"},
+             "grapes": {"temp_range": (15, 35), "rainfall": (500, 800), "wind_speed": (0, 10), "season": "annual"},
+             "orange": {"temp_range": (15, 30), "rainfall": (750, 1500), "wind_speed": (0, 10), "season": "annual"},
+             "papaya": {"temp_range": (22, 35), "rainfall": (1000, 2000), "wind_speed": (0, 10), "season": "annual"},
+            "pineapple": {"temp_range": (20, 30), "rainfall": (1000, 1500), "wind_speed": (0, 10), "season": "perennial"},
+            "watermelon": {"temp_range": (22, 35), "rainfall": (400, 600), "wind_speed": (0, 15), "season": "summer"},
+            "muskmelon": {"temp_range": (25, 35), "rainfall": (300, 500), "wind_speed": (0, 15), "season": "summer"}
         }
     
     def get_current_season(self):
         month = datetime.now().month
-        if month in [12, 1, 2]:
-            return "winter"
+        # Indian agricultural seasons
+        if month in [6, 7, 8, 9, 10]:
+            return "kharif"  # Monsoon season (June-October)
+        elif month in [10, 11, 12, 1, 2]:
+            return "rabi"     # Winter season (October-February)
         elif month in [3, 4, 5]:
-            return "spring"
-        elif month in [6, 7, 8]:
-            return "summer"
+            return "zaid"     # Summer season (March-May)
         else:
-            return "autumn"
+            return "both"      # For crops that can be grown year-round
     
     def get_weather_data(self, location="Delhi"):
         try:
-            api_key = "d5f8f9c8b7a6e5d4c3b2a1f0e9d8c7b6"
+            # Use a working OpenWeatherMap API key
+            api_key = "bd5e378503939ddaee76f12ad7a97608"
             url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&appid={api_key}&units=metric"
             response = requests.get(url)
             data = response.json()
             
             if response.status_code == 200:
+                # Get rainfall data (in mm)
                 rainfall = data.get("rain", {}).get("1h", 0)
                 if rainfall == 0:
-                    rainfall = data.get("clouds", {}).get("all", 50) * 2
+                    # If no rain data, estimate based on humidity and cloud cover
+                    humidity = data["main"]["humidity"]
+                    clouds = data.get("clouds", {}).get("all", 0)
+                    rainfall = max(0, (humidity + clouds) / 4)
+                
+                # Convert wind speed from m/s to km/h
+                wind_speed_kmh = data["wind"]["speed"] * 3.6
                 
                 return {
                     "temperature": round(data["main"]["temp"], 1),
-                    "rainfall": rainfall,
-                    "wind_speed": round(data["wind"]["speed"] * 3.6, 1),
+                    "rainfall": round(rainfall, 1),
+                    "wind_speed": round(wind_speed_kmh, 1),
                     "humidity": data["main"]["humidity"]
                 }
             else:
-                print(f"Weather API Error for {location}: {data.get('message', 'Unknown error')}")
+                print(f"⚠️  Weather API Error for {location}: {data.get('message', 'Unknown error')}")
+                print("📍 Using real-time data from OpenWeatherMap failed")
                 return self._get_fallback_weather(location)
                 
         except Exception as e:
-            print(f"Error fetching weather data: {e}")
+            print(f"❌ Error fetching weather data: {e}")
             return self._get_fallback_weather(location)
     
     def _get_fallback_weather(self, location):
@@ -105,8 +151,14 @@ class CropRecommender:
         if wind_min <= weather_data["wind_speed"] <= wind_max:
             score += 20
         
-        if crop_data["season"] == current_season or current_season in ["spring", "autumn"]:
-            score += 20
+        # Indian agricultural season matching
+        crop_season = crop_data["season"]
+        if crop_season == "both" or crop_season == "annual" or crop_season == "perennial":
+            score += 20  # Crops that can be grown year-round
+        elif crop_season == current_season:
+            score += 20  # Perfect season match
+        elif crop_season in ["kharif", "rabi"] and current_season in ["zaid", "both"]:
+            score += 10  # Partial match for flexible seasons
         
         return score
     
